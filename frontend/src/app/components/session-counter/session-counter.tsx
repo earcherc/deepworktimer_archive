@@ -14,7 +14,7 @@ interface SessionCounterProps {
 const SessionCounter: FC<SessionCounterProps> = ({ target, completed, isActive, isBreak, onReset, onClick }) => {
   return (
     <>
-      <h2 className='text-xl text-gray-900 dark:text-white text-center font-semibold mb-6'>
+      <h2 className='text-xl text-gray-900 dark:text-white text-center font-semibold mb-5'>
         Streak Counter
       </h2>
       <div
@@ -45,7 +45,7 @@ const SessionCounter: FC<SessionCounterProps> = ({ target, completed, isActive, 
       <div className="flex gap-3">
         <button
           className={classNames(
-            "flex-1 rounded-lg px-5 py-2.5 font-medium transition-all duration-200",
+            "flex-1 rounded-lg px-5 py-1 font-medium transition-all duration-200",
             !isActive
               ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500"
               : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white opacity-50 cursor-not-allowed"
@@ -57,7 +57,7 @@ const SessionCounter: FC<SessionCounterProps> = ({ target, completed, isActive, 
         {completed > 0 && (
           <button
             className={classNames(
-              "flex-1 rounded-lg px-5 py-2.5 font-medium transition-all duration-200",
+              "flex-1 rounded-lg px-5 py-1 font-medium transition-all duration-200",
               !isActive
                 ? "border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-red-500 dark:hover:text-red-400 hover:border-gray-300 dark:hover:border-gray-500 active:bg-gray-200 dark:active:bg-gray-600"
                 : "border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 opacity-50 cursor-not-allowed"
