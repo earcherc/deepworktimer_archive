@@ -6,7 +6,3 @@ export enum TimerMode {
 }
 
 export const timerModeAtom = atom<TimerMode>(TimerMode.Countdown);
-
-export type ComponentName = 'dailyGoal' | 'category';
-
-export const visibleComponentsAtom = atom<ComponentName[]>([]);
