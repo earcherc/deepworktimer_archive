@@ -7,6 +7,7 @@ import DailyGoalComponent from '../daily-goal/daily-goal';
 import useToast from '@context/toasts/toast-context';
 import Timer from '../timer/timer';
 import { useEffect, useState } from 'react';
+import SessionCounter from '../session-counter/session-counter';
 
 export default function Sidebar() {
   const { addToast } = useToast();
@@ -63,6 +64,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col space-y-4">
       <Timer />
+      <SessionCounter />
       {visible && (
         <>
           <DailyGoalComponent />

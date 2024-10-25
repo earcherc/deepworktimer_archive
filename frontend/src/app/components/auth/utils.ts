@@ -37,3 +37,11 @@ export async function handleGoogleLogin(): Promise<string> {
     client.requestAccessToken();
   });
 }
+
+export const QUERY_KEYS = {
+  studyCategories: 'studyCategories',
+  dailyGoals: 'dailyGoals',
+  studyBlocks: 'studyBlocks',
+  sessionCounters: 'sessionCounters',
+  timeSettings: 'timeSettings',
+};

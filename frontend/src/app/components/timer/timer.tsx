@@ -18,22 +18,12 @@ import {
   TimeSettingsService,
 } from '@api';
 import { getCurrentUTC, getTodayDateRange, toLocalTime, toUTC } from '@utils/dateUtils';
-import SessionCounterModal from '../session-counter/session-counter-modal';
 import TimeSettingsModal from '../time-settings/time-settings-view';
 import { useModalContext } from '@app/context/modal/modal-context';
-import SessionCounter from '../session-counter/session-counter';
 import { createMutationErrorHandler } from '@utils/httpUtils';
-import { TimerMode, timerModeAtom } from '../../store/atoms';
+import { timerAtom, TimerMode } from '../../store/atoms';
 import useToast from '@context/toasts/toast-context';
-
-// Constants and utility functions
-const QUERY_KEYS = {
-  studyCategories: 'studyCategories',
-  dailyGoals: 'dailyGoals',
-  studyBlocks: 'studyBlocks',
-  sessionCounters: 'sessionCounters',
-  timeSettings: 'timeSettings',
-};
+import { QUERY_KEYS } from '../auth/utils';
 
 const minutesToSeconds = (minutes: number) => minutes * 60;
 const secondsToMilliseconds = (seconds: number) => seconds * 1000;
@@ -42,18 +32,12 @@ const millisecondsToSeconds = (milliseconds: number) => Math.floor(milliseconds 
 const DEFAULT_DURATION = minutesToSeconds(60);
 const FINAL_BELL_BUFFER = 5000;
 
-type TimerState = {
-  time: number;
-  isActive: boolean;
-  isBreakMode: boolean;
-  studyBlockId: number | null;
-};
-
 const Timer: React.FC = () => {
   const { addToast } = useToast();
   const { showModal } = useModalContext();
   const handleMutationError = createMutationErrorHandler(addToast);
   const queryClient = useQueryClient();
+
   const dateRange = getTodayDateRange();
   const [audio, setAudio] = useState<{
     break: HTMLAudioElement | null;
@@ -65,13 +49,7 @@ const Timer: React.FC = () => {
     end: null,
   });
 
-  const [mode, setMode] = useAtom(timerModeAtom);
-  const [timerState, setTimerState] = useState<TimerState>({
-    time: DEFAULT_DURATION,
-    isActive: false,
-    isBreakMode: false,
-    studyBlockId: null,
-  });
+  const [timerState, setTimerState] = useAtom(timerAtom);
   const [initialTimeSet, setInitialTimeSet] = useState(false);
 
   const workerRef = useRef<Worker | null>(null);
@@ -295,7 +273,7 @@ const Timer: React.FC = () => {
           isBreakMode: false,
           studyBlockId: null,
           time:
-            mode === TimerMode.Countdown
+            timerState.mode === TimerMode.Countdown
               ? activeTimeSettings?.duration
                 ? minutesToSeconds(activeTimeSettings.duration)
                 : DEFAULT_DURATION
@@ -304,7 +282,7 @@ const Timer: React.FC = () => {
         if (workerRef.current) workerRef.current.postMessage('stop');
       }
 
-      if (completed && mode === TimerMode.Countdown) {
+      if (completed && timerState.mode === TimerMode.Countdown) {
         const newCompleted = (activeSessionCounter?.completed || 0) + 1;
         await handleTimerFinished(newCompleted);
       }
@@ -313,7 +291,7 @@ const Timer: React.FC = () => {
       timerState.studyBlockId,
       timerState.isBreakMode,
       activeSessionCounter,
-      mode,
+      timerState,
       updateStudyBlockMutation,
       handleTimerFinished,
       activeTimeSettings,
@@ -322,15 +300,15 @@ const Timer: React.FC = () => {
 
   const handleTick = useCallback(() => {
     setTimerState((prev) => {
-      const newTime = mode === TimerMode.Countdown ? Math.max(prev.time - 1, 0) : prev.time + 1;
+      const newTime = timerState.mode === TimerMode.Countdown ? Math.max(prev.time - 1, 0) : prev.time + 1;
       if (
         prev.isActive &&
         !prev.isBreakMode &&
         activeTimeSettings?.sound_interval &&
         activeTimeSettings.is_sound !== false
       ) {
-        const elapsedTime = mode === TimerMode.Countdown ? (activeTimeSettings.duration || 0) * 60 - newTime : newTime;
-        const remainingTime = secondsToMilliseconds(mode === TimerMode.Countdown ? newTime : elapsedTime);
+        const elapsedTime = timerState.mode === TimerMode.Countdown ? (activeTimeSettings.duration || 0) * 60 - newTime : newTime;
+        const remainingTime = secondsToMilliseconds(timerState.mode === TimerMode.Countdown ? newTime : elapsedTime);
         if (
           remainingTime > FINAL_BELL_BUFFER &&
           elapsedTime > 0 &&
@@ -340,7 +318,7 @@ const Timer: React.FC = () => {
         }
       }
 
-      if (mode === TimerMode.Countdown && newTime === 0) {
+      if (timerState.mode === TimerMode.Countdown && newTime === 0) {
         if (prev.isBreakMode) {
           stopTimer();
           sendNotification('Break Finished', 'Time to start working!');
@@ -353,7 +331,7 @@ const Timer: React.FC = () => {
       return { ...prev, time: newTime };
     });
   }, [
-    mode,
+    timerState,
     activeTimeSettings?.sound_interval,
     activeTimeSettings?.is_sound,
     activeTimeSettings?.duration,
@@ -411,7 +389,10 @@ const Timer: React.FC = () => {
         time: millisecondsToSeconds(newTime),
         isActive: true,
       }));
-      setMode(incompleteBlock.is_countdown ? TimerMode.Countdown : TimerMode.OpenSession);
+      setTimerState(prev => ({
+        ...prev,
+        mode: incompleteBlock.is_countdown ? TimerMode.Countdown : TimerMode.OpenSession
+      }));
       if (workerRef.current) workerRef.current.postMessage('start');
     } else if (activeTimeSettings) {
       setTimerState((prev) => ({
@@ -429,7 +410,7 @@ const Timer: React.FC = () => {
     activeTimeSettings,
     activeSessionCounter,
     completeDueStudyBlock,
-    setMode,
+    setTimerState,
   ]);
 
   useEffect(() => {
@@ -439,7 +420,7 @@ const Timer: React.FC = () => {
     if (timerState.isActive || timerState.isBreakMode) {
       if (timerState.isBreakMode) {
         title = `${formattedTime} - BREAK`;
-      } else if (mode === TimerMode.Countdown) {
+      } else if (timerState.mode === TimerMode.Countdown) {
         title = `${formattedTime} - ${activeSessionCounter ? activeSessionCounter.completed + 1 : 1}/${activeSessionCounter ? activeSessionCounter.target : 5
           }`;
       } else {
@@ -452,7 +433,7 @@ const Timer: React.FC = () => {
     return () => {
       document.title = 'Timer';
     };
-  }, [timerState, activeSessionCounter, mode]);
+  }, [timerState, activeSessionCounter, timerState]);
 
   const startTimer = async () => {
     if ('Notification' in window && Notification.permission !== 'granted') {
@@ -468,7 +449,7 @@ const Timer: React.FC = () => {
     }
 
     const newBlock = await createStudyBlockMutation.mutateAsync({
-      is_countdown: mode === TimerMode.Countdown,
+      is_countdown: timerState.mode === TimerMode.Countdown,
       daily_goal_id: activeDailyGoal?.id,
       study_category_id: activeCategory?.id,
     });
@@ -484,16 +465,21 @@ const Timer: React.FC = () => {
 
   const toggleMode = () => {
     if (timerState.isActive) return;
-    setMode((prevMode) => {
-      const newMode = prevMode === TimerMode.Countdown ? TimerMode.OpenSession : TimerMode.Countdown;
+
+    setTimerState((prev) => {
+      const newMode = prev.mode === TimerMode.Countdown ? TimerMode.OpenSession : TimerMode.Countdown;
       const newTime =
         newMode === TimerMode.Countdown
           ? activeTimeSettings?.duration
             ? minutesToSeconds(activeTimeSettings.duration)
             : DEFAULT_DURATION
           : 0;
-      setTimerState((prev) => ({ ...prev, time: newTime }));
-      return newMode;
+
+      return {
+        ...prev,
+        mode: newMode,
+        time: newTime
+      };
     });
   };
 
@@ -509,7 +495,7 @@ const Timer: React.FC = () => {
   };
 
   const isButtonDisabled = (timerMode: TimerMode) => {
-    return timerState.isActive && mode !== timerMode;
+    return timerState.isActive && timerState.mode !== timerMode;
   };
 
   const openSettingsModal = () => {
@@ -521,20 +507,7 @@ const Timer: React.FC = () => {
     });
   };
 
-  const openSessionsModal = () => {
-    showModal({
-      type: 'default',
-      title: 'Streak Counter',
-      message: 'Set a goal for how many pomodoro cycles you want to complete in your study session, and blow past it!',
-      content: <SessionCounterModal />,
-    });
-  };
 
-  const resetSessionCounter = () => {
-    if (activeSessionCounter) {
-      createSessionCounterMutation.mutate({ target: activeSessionCounter.target, completed: 0, is_selected: true });
-    }
-  };
 
   return (
     <>
@@ -549,7 +522,7 @@ const Timer: React.FC = () => {
                   disabled={isButtonDisabled(timerMode)}
                   className={classNames(
                     'text-sm font-medium transition-colors',
-                    mode === timerMode
+                    timerState.mode === timerMode
                       ? 'text-blue-500 font-semibold'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
                     isButtonDisabled(timerMode) && 'opacity-50 cursor-not-allowed',
@@ -600,18 +573,6 @@ const Timer: React.FC = () => {
           </div>
         </div>
       </div>
-      {mode === TimerMode.Countdown && (
-        <div className='rounded-lg bg-white dark:bg-gray-800 p-6 shadow'>
-          <SessionCounter
-            target={activeSessionCounter ? activeSessionCounter.target : 5}
-            completed={activeSessionCounter ? activeSessionCounter.completed : 0}
-            isActive={timerState.isActive}
-            isBreak={timerState.isBreakMode}
-            onReset={resetSessionCounter}
-            onClick={openSessionsModal}
-          />
-        </div>
-      )}
     </>
   );
 };
