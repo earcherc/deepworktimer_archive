@@ -540,9 +540,9 @@ const Timer: React.FC = () => {
     <>
       <div className="rounded-lg bg-white dark:bg-gray-800 p-6 shadow">
         <div className="flex flex-col items-center">
-          <div className="mb-4 flex space-x-4">
-            {!timerState.isBreakMode &&
-              Object.values(TimerMode).map((timerMode) => (
+          {!timerState.isBreakMode && (
+            <div className="mb-4 flex space-x-4">
+              {Object.values(TimerMode).map((timerMode) => (
                 <button
                   key={timerMode}
                   onClick={toggleMode}
@@ -558,15 +558,16 @@ const Timer: React.FC = () => {
                   {timerMode}
                 </button>
               ))}
-          </div>
-          <p className="mb-2 text-6xl font-bold text-gray-900 dark:text-white mb-4">{formatTime(timerState.time)}</p>
+            </div>
+          )}
           {timerState.isBreakMode && (
-            <p className="mb-4 text-lg font-medium text-blue-500">
+            <p className="mb-2 text-lg font-medium text-blue-500">
               {timerState.time > minutesToSeconds(activeTimeSettings?.short_break_duration || 5)
                 ? 'Long Break'
                 : 'Short Break'}
             </p>
           )}
+          <p className="mb-2 text-6xl font-bold text-gray-900 dark:text-white mb-4">{formatTime(timerState.time)}</p>
           <div className="flex space-x-3 h-10">
             {!timerState.isActive && (
               <button
@@ -593,7 +594,7 @@ const Timer: React.FC = () => {
                 onClick={() => stopTimer()}
                 className="flex items-center justify-center rounded-full px-6 h-full text-sm font-semibold text-white transition-colors bg-red-500 hover:bg-red-600"
               >
-                Clear
+                End
               </button>
             )}
           </div>
