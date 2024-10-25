@@ -176,13 +176,15 @@ const StudyBlockEdit: React.FC<StudyBlockEditProps> = ({ block }) => {
       </form>
 
       <div className="flex w-full space-x-2">
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="w-full py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 hover:bg-red-50"
-        >
-          Delete
-        </button>
+        {!isCurrentSession && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="w-full py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        )}
         <button
           type="button"
           onClick={hideModal}
