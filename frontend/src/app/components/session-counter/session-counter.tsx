@@ -40,7 +40,7 @@ const SessionCounter: FC = () => {
     showModal({
       type: 'default',
       title: 'Streak Counter',
-      message: 'Set a goal for how many pomodoro cycles you want to complete in your study session, and blow past it!',
+      message: 'Set a goal to track how many pomodoro cycles complete.',
       content: <SessionCounterModal />,
     });
   };

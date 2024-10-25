@@ -49,7 +49,7 @@ const StudyCategoryComponent = () => {
     showModal({
       type: 'default',
       title: 'Create Work Category',
-      message: 'Create a category to track how much time you spend on a subject or task.',
+      message: 'Track how much time you spend on a subject or task.',
       content: <StudyCategoryCreate />,
     });
   };
@@ -61,7 +61,7 @@ const StudyCategoryComponent = () => {
       <div className="mb-4 flex items-center justify-between">
         <Menu as="div" className="relative w-full">
           <Menu.Button className="flex w-full items-center justify-between rounded-md bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 ">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Select category</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Category</h2>
             <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </Menu.Button>
           <Transition

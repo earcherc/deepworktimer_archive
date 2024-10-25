@@ -67,8 +67,7 @@ const Toast = ({ toast }: { toast: Toast }) => {
                 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-gray-50',
               )}
             >
-              <span className="sr-only">Dismiss</span>
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              <XMarkIcon className="h-5 w-5" />
             </button>
           </div>
         </div>

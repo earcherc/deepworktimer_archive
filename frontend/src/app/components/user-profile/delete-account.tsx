@@ -43,7 +43,7 @@ export default function DeleteAccountForm() {
           isPrimary: true,
         },
         {
-          text: 'Dismiss',
+          text: 'Cancel',
           onClick: hideModal,
         },
       ],
