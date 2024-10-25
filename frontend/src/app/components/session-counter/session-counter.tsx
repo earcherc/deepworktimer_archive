@@ -1,46 +1,86 @@
-import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
 import { type FC } from 'react';
+import { Tooltip } from 'react-tooltip';
 
 interface SessionCounterProps {
   target: number;
   completed: number;
   isActive: boolean;
+  isBreak: boolean;
   onReset: () => void;
   onClick: () => void;
 }
 
-const SessionCounter: FC<SessionCounterProps> = ({ target, completed, isActive, onReset, onClick }) => {
+const SessionCounter: FC<SessionCounterProps> = ({ target, completed, isActive, isBreak, onReset, onClick }) => {
   return (
-    <div className="flex mt-2 mb-3 cursor-pointer relative group max-w-48" onClick={onClick}>
-      <div className="flex space-x-4 transition-colors flex-wrap">
-        {[...Array(target)].map((val, i) => (
-          <div
-            key={val + i}
-            className={classNames('w-4 h-4 rounded-full mb-1', {
-              'bg-gray-300': i >= completed && !(i === completed && isActive),
-              'bg-blue-500': i < completed,
-              'relative overflow-hidden bg-gray-300': i === completed && isActive,
-            })}
-          >
-            {i === completed && isActive && (
-              <div className="absolute inset-0 bg-blue-500" style={{ clipPath: 'inset(0 50% 0 0)' }} />
-            )}
-          </div>
-        ))}
+    <>
+      <h2 className='text-xl text-gray-900 text-center font-semibold mb-6'>
+        Streak Counter
+      </h2>
+      <div
+        className='flex items-center mb-6'
+        data-tooltip-id="session-counter-tooltip"
+        data-tooltip-content={`Session Counter: ${completed}/${target} completed`}
+      >
+        <div className="flex items-center flex-wrap gap-3 w-full justify-center">
+          {[...Array(target)].map((val, i) => (
+            <div
+              key={val + i}
+              className={classNames('w-4 h-4 rounded-full transition-colors duration-200', {
+                'bg-gray-300': i >= completed && !(i === completed && isActive),
+                'bg-blue-500': i < completed,
+                'relative overflow-hidden bg-gray-300': i === completed && isActive,
+              })}
+            >
+              {i === completed && isActive && !isBreak && (
+                <div
+                  className="absolute inset-0 bg-blue-500"
+                  style={{ clipPath: 'inset(0 50% 0 0)' }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      {completed > 0 && (
+      <div className="flex gap-3">
         <button
-          className="absolute -mt-px -right-10 top-1/2 transform -translate-y-1/2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gray-50 rounded-full p-1"
-          onClick={(e) => {
-            e.stopPropagation();
-            onReset();
-          }}
+          className={classNames(
+            "flex-1 text-gray-900 rounded-lg px-5 py-2.5 font-medium transition-all duration-200",
+            !isActive
+              ? "bg-gray-100 hover:bg-gray-200 active:bg-gray-300"
+              : "bg-gray-100 opacity-50 cursor-not-allowed"
+          )}
+          onClick={!isActive ? onClick : undefined}
         >
-          <ArrowPathIcon className="h-5 w-5" />
+          Edit
         </button>
-      )}
-    </div>
+        {completed > 0 && (
+          <button
+            className={classNames(
+              "flex-1 rounded-lg px-5 py-2.5 font-medium transition-all duration-200 text-gray-600",
+              !isActive
+                ? "border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 active:bg-red-100"
+                : "border border-gray-200 opacity-50 cursor-not-allowed"
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isActive) {
+                onReset();
+              }
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <Tooltip
+        id="session-counter-tooltip"
+        delayShow={800}
+        place="bottom"
+        className='z-50'
+      />
+    </>
   );
 };
 

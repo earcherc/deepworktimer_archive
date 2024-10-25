@@ -440,9 +440,8 @@ const Timer: React.FC = () => {
       if (timerState.isBreakMode) {
         title = `${formattedTime} - BREAK`;
       } else if (mode === TimerMode.Countdown) {
-        title = `${formattedTime} - ${activeSessionCounter ? activeSessionCounter.completed + 1 : 1}/${
-          activeSessionCounter ? activeSessionCounter.target : 5
-        }`;
+        title = `${formattedTime} - ${activeSessionCounter ? activeSessionCounter.completed + 1 : 1}/${activeSessionCounter ? activeSessionCounter.target : 5
+          }`;
       } else {
         title = formattedTime;
       }
@@ -525,8 +524,8 @@ const Timer: React.FC = () => {
   const openSessionsModal = () => {
     showModal({
       type: 'default',
-      title: 'Session Counter',
-      message: 'Create a targeted streak counter that will continue to grow as you fully complete sessions.',
+      title: 'Streak Counter',
+      message: 'Set a goal for how many pomodoro cycles you want to complete in your study session, and blow past it!',
       content: <SessionCounterModal />,
     });
   };
@@ -538,76 +537,81 @@ const Timer: React.FC = () => {
   };
 
   return (
-    <div className="rounded-lg bg-white dark:bg-gray-800 p-6 shadow">
-      <div className="flex flex-col items-center">
-        <div className="mb-4 flex space-x-4">
-          {!timerState.isBreakMode &&
-            Object.values(TimerMode).map((timerMode) => (
+    <>
+      <div className="rounded-lg bg-white dark:bg-gray-800 p-6 shadow">
+        <div className="flex flex-col items-center">
+          <div className="mb-4 flex space-x-4">
+            {!timerState.isBreakMode &&
+              Object.values(TimerMode).map((timerMode) => (
+                <button
+                  key={timerMode}
+                  onClick={toggleMode}
+                  disabled={isButtonDisabled(timerMode)}
+                  className={classNames(
+                    'text-sm font-medium transition-colors',
+                    mode === timerMode
+                      ? 'text-blue-500 font-semibold'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                    isButtonDisabled(timerMode) && 'opacity-50 cursor-not-allowed',
+                  )}
+                >
+                  {timerMode}
+                </button>
+              ))}
+          </div>
+          <p className="mb-2 text-6xl font-bold text-gray-900 dark:text-white mb-4">{formatTime(timerState.time)}</p>
+          {timerState.isBreakMode && (
+            <p className="mb-4 text-lg font-medium text-blue-500">
+              {timerState.time > minutesToSeconds(activeTimeSettings?.short_break_duration || 5)
+                ? 'Long Break'
+                : 'Short Break'}
+            </p>
+          )}
+          <div className="flex space-x-3 h-10">
+            {!timerState.isActive && (
               <button
-                key={timerMode}
-                onClick={toggleMode}
-                disabled={isButtonDisabled(timerMode)}
+                onClick={openSettingsModal}
+                className="flex items-center justify-center rounded-full px-4 h-full transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                <span className="whitespace-nowrap">Settings</span>
+              </button>
+            )}
+            {!timerState.isBreakMode && (
+              <button
+                onClick={timerState.isActive ? () => stopTimer() : startTimer}
                 className={classNames(
-                  'text-sm font-medium transition-colors',
-                  mode === timerMode
-                    ? 'text-blue-500 font-semibold'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
-                  isButtonDisabled(timerMode) && 'opacity-50 cursor-not-allowed',
+                  'flex items-center justify-center rounded-full px-6 h-full text-sm font-semibold text-white transition-colors',
+                  timerState.isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600',
                 )}
               >
-                {timerMode}
+                {timerState.isActive ? 'Stop' : 'Start'}
               </button>
-            ))}
+            )}
+            {timerState.isBreakMode && (
+              <button
+                onClick={() => stopTimer()}
+                className="flex items-center justify-center rounded-full px-6 h-full text-sm font-semibold text-white transition-colors bg-red-500 hover:bg-red-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
-        <p className="mb-2 text-6xl font-bold text-gray-900 dark:text-white">{formatTime(timerState.time)}</p>
-        {mode === TimerMode.Countdown && !timerState.isBreakMode && (
+      </div>
+      {mode === TimerMode.Countdown && (
+        <div className='rounded-lg bg-white dark:bg-gray-800 p-6 shadow'>
           <SessionCounter
             target={activeSessionCounter ? activeSessionCounter.target : 5}
             completed={activeSessionCounter ? activeSessionCounter.completed : 0}
             isActive={timerState.isActive}
+            isBreak={timerState.isBreakMode}
             onReset={resetSessionCounter}
             onClick={openSessionsModal}
           />
-        )}
-        {timerState.isBreakMode && (
-          <p className="mb-4 text-lg font-medium text-blue-500">
-            {timerState.time > minutesToSeconds(activeTimeSettings?.short_break_duration || 5)
-              ? 'Long Break'
-              : 'Short Break'}
-          </p>
-        )}
-        <div className="flex space-x-3">
-          {!timerState.isActive && (
-            <button
-              onClick={openSettingsModal}
-              className="flex items-center rounded-full p-2 px-4 transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-            >
-              <Cog6ToothIcon className="h-5 w-5 mr-2" />
-              <span className="whitespace-nowrap">Settings</span>
-            </button>
-          )}
-          {!timerState.isBreakMode && (
-            <button
-              onClick={timerState.isActive ? () => stopTimer() : startTimer}
-              className={classNames(
-                'rounded-full px-6 py-2 text-sm font-semibold text-white transition-colors',
-                timerState.isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600',
-              )}
-            >
-              {timerState.isActive ? 'Stop' : 'Start'}
-            </button>
-          )}
-          {timerState.isBreakMode && (
-            <button
-              onClick={() => stopTimer()}
-              className="rounded-full px-6 py-2 text-sm font-semibold text-white transition-colors bg-red-500 hover:bg-red-600"
-            >
-              Clear
-            </button>
-          )}
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

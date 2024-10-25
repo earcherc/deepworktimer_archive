@@ -90,9 +90,8 @@ const Input: React.FC<{
                   const value = e.target.value;
                   field.onChange(value === '' ? null : Number(value));
                 }}
-                className={`w-16 text-right rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${
-                  error ? 'border-red-500' : ''
-                }`}
+                className={`w-16 text-right rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${error ? 'border-red-500' : ''
+                  }`}
               />
               <span className="text-sm text-gray-500">{unit}</span>
             </div>
@@ -256,14 +255,12 @@ const TimeSettingsCreate: React.FC = () => {
               <Switch
                 checked={field.value ?? false}
                 onChange={(checked) => field.onChange(checked)}
-                className={`${
-                  field.value ? 'bg-blue-600' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
+                className={`${field.value ? 'bg-blue-600' : 'bg-gray-200'
+                  } relative inline-flex h-6 w-11 items-center rounded-full`}
               >
                 <span
-                  className={`${
-                    field.value ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white`}
+                  className={`${field.value ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white`}
                 />
               </Switch>
             )}
@@ -294,14 +291,12 @@ const TimeSettingsCreate: React.FC = () => {
                   <Switch
                     checked={field.value !== undefined && field.value !== null}
                     onChange={(checked) => field.onChange(checked ? 20 : null)}
-                    className={`${
-                      field.value !== undefined && field.value !== null ? 'bg-blue-600' : 'bg-gray-200'
-                    } relative inline-flex h-6 w-11 items-center rounded-full`}
+                    className={`${field.value !== undefined && field.value !== null ? 'bg-blue-600' : 'bg-gray-200'
+                      } relative inline-flex h-6 w-11 items-center rounded-full`}
                   >
                     <span
-                      className={`${
-                        field.value !== undefined && field.value !== null ? 'translate-x-6' : 'translate-x-1'
-                      } inline-block h-4 w-4 transform rounded-full bg-white`}
+                      className={`${field.value !== undefined && field.value !== null ? 'translate-x-6' : 'translate-x-1'
+                        } inline-block h-4 w-4 transform rounded-full bg-white`}
                     />
                   </Switch>
                   {field.value !== undefined && field.value !== null && (
@@ -313,9 +308,8 @@ const TimeSettingsCreate: React.FC = () => {
                           const newValue = e.target.value;
                           field.onChange(newValue === '' ? null : Number(newValue));
                         }}
-                        className={`w-16 text-right rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${
-                          error ? 'border-red-500' : ''
-                        }`}
+                        className={`w-16 text-right rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${error ? 'border-red-500' : ''
+                          }`}
                       />
                       <span className="text-sm text-gray-500">m</span>
                     </div>
@@ -328,17 +322,17 @@ const TimeSettingsCreate: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex justify-end space-x-2 mt-6">
+      <div className="flex w-full space-x-2 mt-6">
         <button
           type="button"
           onClick={hideModal}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
         >
           Create
         </button>

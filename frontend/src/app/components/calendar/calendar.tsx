@@ -104,8 +104,8 @@ const Calendar: React.FC = () => {
   const openEditStudyBlockModal = (block: StudyBlock) => {
     showModal({
       type: 'default',
-      title: 'Edit Work Session',
-      message: 'Add a subjective rating to keep track of your mental state.',
+      title: 'Edit Study Block',
+      message: 'Update study block details or add rating to keep track of your mental state.',
       content: <StudyBlockEdit block={block} />,
     });
   };
@@ -135,10 +135,9 @@ const Calendar: React.FC = () => {
           {(!currentDate || !isToday(currentDate)) && (
             <button
               onClick={resetDate}
-              className="flex items-center items-center flex-nowrap p-1 px-2 rounded bg-gray-100 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="flex items-center flex-nowrap p-1 px-2 rounded bg-gray-100 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
               title="Reset to today"
             >
-              <ArrowPathIcon className="w-4 h-4 mr-1" />
               <span className='text-xs font-semibold'>Today</span>
             </button>
           )}

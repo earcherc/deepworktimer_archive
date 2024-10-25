@@ -67,12 +67,12 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
                     {icon}
                   </div>
                 )}
-                <div className="mt-3 text-center sm:mt-5">
+                <div className="text-center">
                   <Dialog.Title as="h2" className="text-lg font-semibold leading-6 text-gray-900">
                     {modalConfig?.title}
                   </Dialog.Title>
                   {modalConfig?.message && (
-                    <p className="mt-2 text-sm max-w-xs mx-auto text-gray-500">{modalConfig.message}</p>
+                    <p className="mt-2 text-sm max-w-md mx-auto text-gray-500">{modalConfig.message}</p>
                   )}
                 </div>
                 <div className="mt-4">{children}</div>
@@ -82,11 +82,10 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
                       <button
                         key={index}
                         onClick={button.onClick}
-                        className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold ${
-                          button.isPrimary
-                            ? `${buttonColor} text-white`
-                            : 'bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-                        } sm:col-start-${button.isPrimary ? '2' : '1'}`}
+                        className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold ${button.isPrimary
+                          ? `${buttonColor} text-white`
+                          : 'bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                          } sm:col-start-${button.isPrimary ? '2' : '1'}`}
                       >
                         {button.text}
                       </button>

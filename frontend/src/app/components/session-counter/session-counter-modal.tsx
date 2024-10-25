@@ -40,8 +40,9 @@ const SessionCounterModal: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between space-x-4">
+    <>
+      <p className="text-center text-gray-600 mb-1">Target: {target}</p>
+      <div className="flex items-center justify-between space-x-4 mb-6">
         <button
           onClick={() => setTarget(Math.max(1, target - 1))}
           className="text-2xl font-bold text-blue-500 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center"
@@ -56,22 +57,21 @@ const SessionCounterModal: React.FC = () => {
           +
         </button>
       </div>
-      <p className="text-center text-gray-600">Target: {target} sessions</p>
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-center space-x-2 w-full">
         <button
           onClick={hideModal}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           onClick={handleCreate}
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
         >
           Create
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
