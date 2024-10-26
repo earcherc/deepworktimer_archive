@@ -2,7 +2,7 @@
 import Calendar from '@app/components/calendar/calendar';
 import Sidebar from '@app/components/sidebar/sidebar';
 
-const Dashboard = () => {
+const Home = () => {
   return (
     <div className="flex flex-col md:flex-row bg-gray-100 dark:bg-black h-[calc(100vh-4rem)] w-full overflow-hidden">
       <div className="w-full md:w-2/5 h-1/2 md:h-full p-2 md:p-4 overflow-y-auto order-1 md:order-none">
@@ -15,4 +15,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Home;

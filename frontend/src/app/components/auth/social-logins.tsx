@@ -27,7 +27,7 @@ const SocialLogins = () => {
       const accessToken = await handleGoogleLogin();
       const response = await AuthenticationService.googleLoginAuthGoogleLoginPost(accessToken);
       if (response) {
-        router.push('/dashboard');
+        router.push('/home');
       } else {
         throw new Error('Google login failed');
       }

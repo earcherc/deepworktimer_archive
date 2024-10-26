@@ -60,5 +60,5 @@ function redirectToLogin(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/profile/:path*'],
+  matcher: ['/home/:path*', '/profile/:path*', '/social/:path*'],
 };

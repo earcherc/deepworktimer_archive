@@ -12,8 +12,9 @@ import { Fragment } from 'react';
 import Link from 'next/link';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Home', href: '/home' },
   { name: 'Profile', href: '/profile' },
+  { name: 'Social', href: '/social' },
 ];
 
 export default function Nav() {

@@ -22,7 +22,7 @@ const LoginForm = () => {
       return response;
     },
     onSuccess: () => {
-      router.push('/dashboard');
+      router.push('/home');
       setErrorMessage(null);
     },
     onError: (error: unknown) => {
